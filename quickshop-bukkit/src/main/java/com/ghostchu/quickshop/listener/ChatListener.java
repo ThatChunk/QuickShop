@@ -23,14 +23,10 @@ public class ChatListener extends AbstractQSListener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onChat(AsyncPlayerChatEvent e) {
-        if (e.isCancelled() && plugin.getConfig().getBoolean("shop.ignore-cancel-chat-event")) {
-            Log.debug("Ignored a chat event (Cancelled by another plugin, you can force process by turn on ignore-cancel-chat-event)");
-            return;
-        }
-
         if (!plugin.getShopManager().getInteractiveManager().containsKey(e.getPlayer().getUniqueId())) {
             return;
         }
+
         try (PerfMonitor ignored = new PerfMonitor("HandleChat", Duration.of(3, ChronoUnit.SECONDS))) {
             // Fix stupid chat plugin will add a weird space before or after the number we want.
             plugin.getShopManager().handleChat(e.getPlayer(), e.getMessage().trim());
